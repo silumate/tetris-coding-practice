@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
 
 
-    const zTetromino = [
+    const sTetromino = [
         [0, width, width + 1, width * 2 + 1],
         [width + 1, width + 2, width * 2, width * 2 + 1],
         [0, width, width + 1, width * 2 + 1],
@@ -54,25 +54,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const theTretrominos = [
         pTetromino,
-        zTetromino,
+        sTetromino,
         tTetromino,
         oTetromino,
         iTetromino
     ]
 
-    let currentPosition = 4
-    let currentRotation = 0
+    let currentPosition
+    let currentRotation
+    let current
 
-    let random = Math.floor(Math.random() * theTretrominos.length)
 
-    let current = theTretrominos[random][currentRotation]
+    /* ******* Functions are defined below this line ************* */
 
+    // draw the current tetromino
     function draw() {
         current.forEach(index => {
             squares[currentPosition + index].classList.add('tetromino')
         })
     }
 
-    draw()
+    // hide the current tetromino
+    function undraw() {
+        current.forEach(index => {
+            squares[currentPosition + index].classList.remove('tetromino')
+        })
+    }
+
+
+    function moveDown() {
+        undraw()
+        currentPosition += width
+        draw()
+        freeze()
+    }
+
+    function freeze() {
+        if (current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
+            current.forEach(index => squares[currentPosition + index].classList.add('taken'))
+            dropNewTetromino()
+        }
+
+    }
+
+    // start a new tetromino falling
+    function dropNewTetromino() {
+        random = Math.floor(Math.random() * theTretrominos.length)
+        current = theTretrominos[random][0]   
+        currentPosition = 4
+        currentRotation = 0
+        draw()
+    }
+
+
+
+    /* ******* script below this line ************* */
+
+    dropNewTetromino()
+    
+    // move the current tetromino down every second
+    let timerID = setInterval(moveDown, 1000)
+
+
 
 })
