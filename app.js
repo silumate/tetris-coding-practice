@@ -94,7 +94,38 @@ document.addEventListener('DOMContentLoaded', () => {
             current.forEach(index => squares[currentPosition + index].classList.add('taken'))
             dropNewTetromino()
         }
+    }
 
+    function moveLeft() {
+        // if tetromino has a square that is indexed 0, 10, 20, 30... then the tetromino cannot move left.
+        const isAtEdge = current.some(index => ((currentPosition + index) % 10) === 0)
+
+        if (!isAtEdge) {
+            // if tetromino would occupy a square that is taken, move is impossible
+            const isBlocked = current.some(index => squares[currentPosition -1 + index].classList.contains('taken'))
+
+            if (!isBlocked) {
+                undraw()
+                currentPosition--
+                draw()
+            }
+        }
+    }
+
+    function moveRight() {
+        // if tetromino has a square that is indexed 9, 19, 29, 39... then the tetromino cannot move left.
+        const isAtEdge = current.some(index => ((currentPosition + index) % 10) === 9)
+
+        if (!isAtEdge) {
+            // if tetromino would occupy a square that is taken, move is impossible
+            const isBlocked = current.some(index => squares[currentPosition + 1 + index].classList.contains('taken'))
+
+            if (!isBlocked) {
+                undraw()
+                currentPosition++
+                draw()
+            }
+        }
     }
 
     // start a new tetromino falling
@@ -106,6 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
         draw()
     }
 
+    function control(event) {
+        if (event.keyCode === 37) {
+            moveLeft()
+        } else if (event.keyCode === 39) {
+            moveRight()
+        }
+    }
+
 
 
     /* ******* script below this line ************* */
@@ -115,6 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // move the current tetromino down every second
     let timerID = setInterval(moveDown, 1000)
 
-
+    document.addEventListener('keydown', control)
 
 })
