@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentPosition
     let currentRotation
+    let currentTetromino
     let current
 
 
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function moveLeft() {
         // if tetromino has a square that is indexed 0, 10, 20, 30... then the tetromino cannot move left.
-        const isAtEdge = current.some(index => ((currentPosition + index) % 10) === 0)
+        const isAtEdge = current.some(index => ((currentPosition + index) % width) === 0)
 
         if (!isAtEdge) {
             // if tetromino would occupy a square that is taken, move is impossible
@@ -114,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function moveRight() {
         // if tetromino has a square that is indexed 9, 19, 29, 39... then the tetromino cannot move left.
-        const isAtEdge = current.some(index => ((currentPosition + index) % 10) === 9)
+        const isAtEdge = current.some(index => ((currentPosition + index) % width) === width - 1)
 
         if (!isAtEdge) {
             // if tetromino would occupy a square that is taken, move is impossible
@@ -130,18 +131,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // start a new tetromino falling
     function dropNewTetromino() {
-        random = Math.floor(Math.random() * theTretrominos.length)
-        current = theTretrominos[random][0]   
         currentPosition = 4
         currentRotation = 0
+        currentTetromino = Math.floor(Math.random() * theTretrominos.length)
+        current = theTretrominos[currentTetromino][currentRotation]   
+        draw()
+    }
+
+    // select the next rotation of a tetromino
+    function rotate() {
+        undraw()
+        currentRotation++
+        if (currentRotation >= theTretrominos[currentTetromino].length) {
+            currentRotation = 0
+        }
+        current = theTretrominos[currentTetromino][currentRotation]
         draw()
     }
 
     function control(event) {
         if (event.keyCode === 37) {
             moveLeft()
+        } else if (event.keyCode === 38) {
+            rotate()
         } else if (event.keyCode === 39) {
             moveRight()
+        } else if (event.keyCode === 40) {
+            moveDown()
         }
     }
 
