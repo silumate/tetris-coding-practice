@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid')
     let squares = Array.from(document.querySelectorAll('.grid div'))
+    const nextUpSquares =  document.querySelectorAll('.mini-grid div')  //squares reserved to show next tetromino that will fall.
     const ScoreDisplay = document.querySelector('#score')
     const StartButton = document.querySelector('#start-button')
     const width = 10
+    const nextUpWidth = 4
 
     // tetrominos - AKA the Tetris pieces
 
@@ -60,10 +62,20 @@ document.addEventListener('DOMContentLoaded', () => {
         iTetromino
     ]
 
+    //array of tetorminos without rotations
+    const nextTetrominos = [
+        [1, nextUpWidth+1, nextUpWidth*2+1, 2], //pTetromino
+        [0, nextUpWidth, nextUpWidth+1, nextUpWidth*2+1], //sTetromino
+        [1, nextUpWidth, nextUpWidth+1, nextUpWidth+2], //tTetromino
+        [0, 1, nextUpWidth, nextUpWidth+1], //oTetromino
+        [1, nextUpWidth+1, nextUpWidth*2+1, nextUpWidth*3+1] //iTetromino
+    ]
+
     let currentPosition
     let currentRotation
-    let currentTetromino
+    let currentTetrominoIdx
     let current
+    let nextTetrominoIdx = Math.floor(Math.random() * theTretrominos.length)
 
 
     /* ******* Functions are defined below this line ************* */
@@ -133,20 +145,33 @@ document.addEventListener('DOMContentLoaded', () => {
     function dropNewTetromino() {
         currentPosition = 4
         currentRotation = 0
-        currentTetromino = Math.floor(Math.random() * theTretrominos.length)
-        current = theTretrominos[currentTetromino][currentRotation]   
+        currentTetrominoIdx = nextTetrominoIdx
+        nextTetrominoIdx = Math.floor(Math.random() * theTretrominos.length)
+        current = theTretrominos[currentTetrominoIdx][currentRotation]   
         draw()
+        drawMiniGrid()
     }
 
     // select the next rotation of a tetromino
     function rotate() {
         undraw()
         currentRotation++
-        if (currentRotation >= theTretrominos[currentTetromino].length) {
+        if (currentRotation >= theTretrominos[currentTetrominoIdx].length) {
             currentRotation = 0
         }
-        current = theTretrominos[currentTetromino][currentRotation]
+        current = theTretrominos[currentTetrominoIdx][currentRotation]
         draw()
+    }
+
+    //display next shape in the mini-grid
+    function drawMiniGrid() {
+        // clear out everything in the grid
+        nextUpSquares.forEach(square => square.classList.remove('tetromino'))
+
+        // color the squares in the grid according to the tetromino
+        nextTetrominos[nextTetrominoIdx].forEach(index => {
+            nextUpSquares[index].classList.add('tetromino')
+        })
     }
 
     function control(event) {
