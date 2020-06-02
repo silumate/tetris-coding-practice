@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
             0   |  X X               X      X
         width   |  X      X X X      X      X X X
     2 * width   |  X          X    X X
-    
     */
     const pTetromino = [
         [1, width + 1, 2 * width + 1, 2],
@@ -25,10 +24,36 @@ document.addEventListener('DOMContentLoaded', () => {
         [0, width, width + 1, width + 2]
     ]
 
+    /*
+                 0 1 2    0 1 2    0 1 2    0 1 2
+                |--------------------------------    
+            0   |  X               X X          X
+        width   |  X      X X X      X      X X X
+    2 * width   |  X X    X          X          
+    */
+   const lTetromino = [
+    [1, width + 1, 2 * width + 1, 2 * width + 2],
+    [width, width + 1, width + 2, 2 * width],
+    [0, 1, width + 1, 2 * width + 1],
+    [2, width, width + 1, width + 2]
+]
+
 
     const sTetromino = [
         [0, width, width + 1, width * 2 + 1],
         [width + 1, width + 2, width * 2, width * 2 + 1]
+    ]
+
+    /*
+                 0 1 2    0 1 2
+                |--------------
+            0   |  X      X X
+        width   |X X        X X
+    2 * width   |X  
+    */
+    const zTetromino = [
+        [1, width, width + 1, 2*width],
+        [0, 1, width + 1, width + 2]
     ]
 
     const tTetromino = [
@@ -50,7 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const theTretrominos = [
         pTetromino,
+        lTetromino,
         sTetromino,
+        zTetromino,
         tTetromino,
         oTetromino,
         iTetromino
@@ -59,7 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
     //array of tetorminos without rotations
     const nextTetrominos = [
         [1, nextUpWidth+1, nextUpWidth*2+1, 2], //pTetromino
+        [1, nextUpWidth + 1, 2*nextUpWidth + 1, 2* nextUpWidth + 2], //lTetromino
         [0, nextUpWidth, nextUpWidth+1, nextUpWidth*2+1], //sTetromino
+        [1, nextUpWidth, nextUpWidth + 1, 2*nextUpWidth], //zTetromino
         [1, nextUpWidth, nextUpWidth+1, nextUpWidth+2], //tTetromino
         [0, 1, nextUpWidth, nextUpWidth+1], //oTetromino
         [1, nextUpWidth+1, nextUpWidth*2+1, nextUpWidth*3+1] //iTetromino
