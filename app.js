@@ -2,8 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid')
     let squares = Array.from(document.querySelectorAll('.grid div'))
     const nextUpSquares =  document.querySelectorAll('.mini-grid div')  //squares reserved to show next tetromino that will fall.
-    const ScoreDisplay = document.querySelector('#score')
-    const StartButton = document.querySelector('#start-button')
+    const scoreDisplay = document.querySelector('#score')
+    const startButton = document.querySelector('#start-button')
+    let timerID
     const width = 10
     const nextUpWidth = 4
 
@@ -165,13 +166,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //display next shape in the mini-grid
     function drawMiniGrid() {
-        // clear out everything in the grid
-        nextUpSquares.forEach(square => square.classList.remove('tetromino'))
+        undrawMiniGrid()
 
         // color the squares in the grid according to the tetromino
         nextTetrominos[nextTetrominoIdx].forEach(index => {
             nextUpSquares[index].classList.add('tetromino')
         })
+    }
+
+    //clear out the mini-grid
+    function undrawMiniGrid() {
+        nextUpSquares.forEach(square => square.classList.remove('tetromino'))
     }
 
     function control(event) {
@@ -186,15 +191,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function startPause() {
+        if (timerID) {
+            clearInterval(timerID)
+            timerID = null
+            undraw()
+            undrawMiniGrid()
+        } else {
+            timerID = setInterval(moveDown, 1000)
+            draw()
+            drawMiniGrid()
+        }
+
+    }
 
 
     /* ******* script below this line ************* */
 
     dropNewTetromino()
     
-    // move the current tetromino down every second
-    let timerID = setInterval(moveDown, 1000)
-
     document.addEventListener('keydown', control)
+    startButton.addEventListener('click', startPause)
 
 })
