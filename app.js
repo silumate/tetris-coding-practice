@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerID
     const width = 10
     const nextUpWidth = 4
+    let score = 0
 
     // tetrominos - AKA the Tetris pieces
 
@@ -128,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function freeze() {
         if (current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
             current.forEach(index => squares[currentPosition + index].classList.add('taken'))
+            updateScore()
             dropNewTetromino()
         }
     }
@@ -227,6 +229,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    // clear out any completed rows and update score
+    function updateScore() {
+        for (let i = 0; i < 199; i += width) {
+            const row = Array.from(new Array(width), (x,j) => i + j)
+
+            if (row.every(index => squares[index].classList.contains('taken'))) {
+                score += 10
+                scoreDisplay.innerHTML = score
+                row.forEach(index => {
+                    squares[index].classList.remove('taken')
+                    squares[index].classList.remove('tetromino')
+                })
+                const removedSquares = squares.splice(i, width)
+                squares.splice(0, 0, ...removedSquares)
+                squares.forEach(cell => grid.appendChild(cell))
+                }
+        }
+    }
 
     /* ******* script below this line ************* */
 
