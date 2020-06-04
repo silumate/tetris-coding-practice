@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             current.forEach(index => squares[currentPosition + index].classList.add('taken'))
             updateScore()
             dropNewTetromino()
+            gameOver()
         }
     }
 
@@ -227,6 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
             drawMiniGrid()
         }
 
+    }
+
+    function gameOver() {
+        if (current.some(index => squares[index + currentPosition].classList.contains('taken'))) {
+            scoreDisplay.innerHTML = '' + score + ' - Game Over'
+            clearInterval(timerID)
+            timerID = null
+        }
     }
 
     // clear out any completed rows and update score
